@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Petit Cake</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background-color: #f6f1e7;
+      margin: 0;
+      padding: 0;
+      color: #4b3621;
+    }
+
+    header {
+      background-color: #a1866f;
+      padding: 1rem;
+      text-align: center;
+      color: white;
+    }
+
+    h1 {
+      margin: 0;
+    }
+
+    .container {
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .cake {
+      background-color: #fff;
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .cake h3 {
+      margin: 0.5rem 0;
+    }
+
+    .cake button {
+      background-color: #a1866f;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .cart {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #4b3621;
+      color: white;
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      max-width: 250px;
+    }
+
+    .cart button {
+      background-color: #f6c28b;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .cart p {
+      white-space: pre-line;
+      margin: 0 0 0.5rem 0;
+    }
+
+
+    #preloader {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: #fff;
+  z-index: 9999;
+  display: flex;
+  align-items: center; /* Centraliza verticalmente */
+  justify-content: center; /* Centraliza horizontalmente */
+  flex-direction: column;
+  transition: opacity 1s ease;
+}
+
+.loader img {
+  width: 100px;
+  animation: pulse 1.5s infinite;
+}
+
+.loader p {
+  font-size: 1.2rem;
+  color: #a1866f;
+  margin-top: 1rem;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
+}
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.jpeg" alt="Petit Cake Logo" style="max-height: 80px; margin-bottom: 0.5rem; border-radius: 50px;">
+    <h1>Petit Cake</h1>
+    <p>Delícias feitas com amor — encomendas via WhatsApp</p>
+  </header>
+
+  <main class="container" id="product-list">
+    <!-- Produtos serão inseridos via JS -->
+  </main>
+
+  <div class="cart" id="cart">
+    <p id="cart-items">Carrinho vazio</p>
+    <button onclick="abrirFormulario()">Finalizar no WhatsApp</button>
+  </div>
+  <div id="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); align-items:center; justify-content:center;">
+    <div style="background:#fff; padding:2rem; border-radius:12px; max-width:400px; width:100%;">
+      <h3 style="margin-top:0;">Finalize seu pedido</h3>
+      <label>Nome:<br><input type="text" id="nome" style="width:100%; margin-bottom:1rem;"></label><br>
+      <label>E-mail:<br><input type="email" id="email" style="width:100%; margin-bottom:1rem;"></label><br>
+      <label>Telefone:<br><input type="tel" id="telefone" style="width:100%; margin-bottom:1rem;"></label><br>
+      <button onclick="enviarParaWhatsapp()" style="background:#a1866f; color:white; border:none; cursor: pointer; padding:0.5rem 1rem; border-radius:8px;">Enviar para o WhatsApp</button>
+      <button onclick="fecharFormulario()" style="background:#ccc; border:none; padding:0.5rem 1rem; cursor: pointer; border-radius:8px; margin-left:1rem;">Cancelar</button>
+    </div>
+  </div>
+
+  <section style="background-color: #fff3e6; padding: 2rem; text-align: center;">
+    <h2 style="margin-bottom: 1rem;">Conheça nossos Mascotes!</h2>
+    <p style="margin-bottom: 2rem;">Eles vão te guiar pelo mundo dos bolos mais gostosos 💕</p>
+    <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 2rem;">
+      <div style="max-width: 200px;">
+        <img src="imagens/petit2.png" alt="petit" style="width: 75%; ">
+        <h3>Lili</h3>
+        <p>Doce e sonhadora, adora o sabor de Red Velvet!</p>
+      </div>
+      <div style="max-width: 200px;">
+        <img src="imagens/maracuja.png" alt="Maru" style="width: 70%; ;">
+        <h3>Maracujito</h3>
+        <p>Todo animado, vive atrás do melhor Maracujá </p>
+      </div>
+    </div>
+  </section>
+
+  <div id="preloader">
+    <div class="loader">
+      <img src="imagens/petit.png" alt="Carregando..." />
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('load', () => {
+      const preloader = document.getElementById('preloader');
+      setTimeout(() => {
+        preloader.style.opacity = '0'; // Começa a transição de fade
+        setTimeout(() => {
+          preloader.style.display = 'none'; // Remove da tela após o fade
+        }, 1000); // Tempo do fade (1 segundo)
+      }, 1000); // Tempo total de exibição (5 segundos)
+    });
+  </script>
+  <script>
+
+
+
+const produtos = [
+  { nome: 'Ninho', imagem: 'imagens/boloninho.jpeg' },
+  { nome: 'Red Velvet', imagem: 'imagens/lilifoto.png' },
+  { nome: 'Brigadeiro', imagem: 'imagens/bolobriga.jpeg' },
+  { nome: 'Maracujá', imagem: 'imagens/bolomacupr.jpeg' },
+  { nome: 'Prestígio', imagem: 'imagens/lilifoto.png' },
+  { nome: 'Cenoura com chocolate', imagem: 'imagens/lilifoto.png' }
+];
+
+    const carrinho = [];
+
+    function renderProdutos() {
+  const lista = document.getElementById('product-list');
+  produtos.forEach(produto => {
+    const card = document.createElement('div');
+    card.className = 'cake';
+    card.innerHTML = `
+      <img src="${produto.imagem}" alt="${produto.nome}" style="width: 100%; border-radius: 8px; margin-bottom: 0.5rem;">
+      <h3>${produto.nome}</h3>
+      <p>R$ 12,00 (1 un)</p>
+      <p> R$ 10,00 (2+ un)</p>
+      <button onclick="adicionarCarrinho('${produto.nome}')">Adicionar</button>
+    `;
+    lista.appendChild(card);
+  });
+}
+
+    function adicionarCarrinho(sabor) {
+      carrinho.push(sabor);
+      atualizarCarrinho();
+    }
+
+    function atualizarCarrinho() {
+      const texto = carrinho.length > 0
+        ? carrinho.map((item, i) => `🍰 - ${item}`).join('\n')
+        : 'Carrinho vazio';
+      document.getElementById('cart-items').textContent = texto;
+    }
+
+    function abrirFormulario() {
+      if (carrinho.length === 0) return alert('Seu carrinho está vazio.');
+      document.getElementById('modal').style.display = 'flex';
+    }
+
+    function fecharFormulario() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
+    function enviarParaWhatsapp() {
+      const nome = document.getElementById('nome').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const telefone = document.getElementById('telefone').value.trim();
+
+      if (!nome || !email || !telefone) {
+        alert('Por favor, preencha todos os campos.');
+        return;
+      }
+
+      let mensagem = '*Pedido Petit Cake*%0A';
+      mensagem += `👤 Nome: ${nome}%0A📧 E-mail: ${email}%0A📱 Telefone: ${telefone}%0A%0A`;
+      mensagem += '*Itens do pedido:*%0A';
+
+      const resumo = {};
+      carrinho.forEach(item => {
+        resumo[item] = (resumo[item] || 0) + 1;
+      });
+
+      for (let sabor in resumo) {
+        mensagem += `• ${sabor}: ${resumo[sabor]} unidade(s)%0A`;
+      }
+
+      const total = carrinho.length < 2 ? carrinho.length * 12 : carrinho.length * 10;
+      mensagem += `%0A💰 Total: R$ ${total},00%0A%0A🍰 Obrigado por comprar com a Petit Cake!`;
+
+      const url = `https://wa.me/11940382338?text=${mensagem}`;
+      window.open(url, '_blank');
+      fecharFormulario();
+    }
+
+    renderProdutos();
+  </script>
+</body>
+</html>
