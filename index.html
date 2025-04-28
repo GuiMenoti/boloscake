@@ -231,35 +231,38 @@ const produtos = [
     }
 
     function enviarParaWhatsapp() {
-      const nome = document.getElementById('nome').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const telefone = document.getElementById('telefone').value.trim();
+  const nome = document.getElementById('nome').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const telefone = document.getElementById('telefone').value.trim();
 
-      if (!nome || !email || !telefone) {
-        alert('Por favor, preencha todos os campos.');
-        return;
-      }
+  if (!nome || !email || !telefone) {
+    alert('Por favor, preencha todos os campos.');
+    return;
+  }
 
-      let mensagem = '*Pedido Petit Cake*';
-      mensagem += `- Nome: ${nome}- E-mail: ${email} - Telefone: ${telefone}`;
-      mensagem += '*Itens do pedido:*';
+  let mensagem = '*Pedido Petit Cake*%0A';
+  mensagem += `- Nome: ${nome}%0A- E-mail: ${email}%0A- Telefone: ${telefone}%0A`;
+  mensagem += '*Itens do pedido:*%0A';
 
-      const resumo = {};
-      carrinho.forEach(item => {
-        resumo[item] = (resumo[item] || 0) + 1;
-      });
+  const resumo = {};
+  carrinho.forEach(item => {
+    resumo[item] = (resumo[item] || 0) + 1;
+  });
 
-      for (let sabor in resumo) {
-        mensagem += `• ${sabor}: ${resumo[sabor]} unidade(s)`;
-      }
+  for (let sabor in resumo) {
+    mensagem += `• ${sabor}: ${resumo[sabor]} unidade(s)%0A`;
+  }
 
-      const total = carrinho.length < 2 ? carrinho.length * 12 : carrinho.length * 10;
-      mensagem += ` Total: R$ ${total}, Obrigado por comprar com a Petit Cake!`;
+  const total = carrinho.length < 2 ? carrinho.length * 12 : carrinho.length * 10;
+  mensagem += `%0ATotal: R$ ${total},00%0AObrigado por comprar com a Petit Cake!`;
 
-      const url = `https://wa.me/11996834883?text=${mensagem}`;
-      window.open(url, '_blank');
-      fecharFormulario();
-    }
+  // Codifica a mensagem para a URL
+  const mensagemCodificada = encodeURIComponent(mensagem);
+
+  const url = `https://wa.me/11996834883?text=${mensagemCodificada}`;
+  window.open(url, '_blank');
+  fecharFormulario();
+}
 
     renderProdutos();
   </script>
