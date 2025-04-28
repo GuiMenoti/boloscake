@@ -160,6 +160,10 @@
       <img src="imagens/petit.png" alt="Carregando..." />
     </div>
   </div>
+  <footer style="background-color: #a1866f; color: white; text-align: center; padding: 1rem; ">
+    <p>&copy; 2025 Petit Cake. Todos os direitos reservados.</p>
+    <p style="font-size: 12px;">Desenvolvido por <a target="_blank" href="https://www.linkedin.com/in/guilherme-menoti-32a898249/">Guilherme Menoti</a></p>
+    </footer>
 
   <script>
     window.addEventListener('load', () => {
@@ -177,12 +181,13 @@
 
 
 const produtos = [
-  { nome: 'Ninho', imagem: 'imagens/boloninho.jpeg' },
-  { nome: 'Red Velvet', imagem: 'imagens/lilifoto.png' },
-  { nome: 'Brigadeiro', imagem: 'imagens/bolobriga.jpeg' },
-  { nome: 'Maracujá', imagem: 'imagens/bolomacupr.jpeg' },
-  { nome: 'Prestígio', imagem: 'imagens/lilifoto.png' },
-  { nome: 'Cenoura com chocolate', imagem: 'imagens/lilifoto.png' }
+  { nome: 'Ninho', imagem: 'imagens/boloninhoimagem.jpeg' },
+  { nome: 'Red Velvet', imagem: 'imagens/boloredimagem.jpeg' },
+  { nome: 'Brigadeiro', imagem: 'imagens/bolochoco.jpeg' },
+  { nome: 'Maracujá Massa Chocolate', imagem: 'imagens/bolomaracujaimagem.jpeg' },
+  { nome: 'Maracujá Massa Branca', imagem: 'imagens/bolomaracujabrancoimagem.jpeg' },
+  { nome: 'Prestígio', imagem: 'imagens/boloprestimagem.jpeg' },
+  { nome: 'Cenoura com chocolate', imagem: 'imagens/bolocenouraimagem.jpeg' }
 ];
 
     const carrinho = [];
@@ -193,16 +198,17 @@ const produtos = [
     const card = document.createElement('div');
     card.className = 'cake';
     card.innerHTML = `
-      <img src="${produto.imagem}" alt="${produto.nome}" style="width: 100%; border-radius: 8px; margin-bottom: 0.5rem;">
+      <div style="width: 100%; height: 250px; overflow: hidden; border-radius: 8px; margin-bottom: 0.5rem;">
+        <img src="${produto.imagem}" alt="${produto.nome}" style="width: 100%; height: 100%; object-fit: contain; border-radius: 15px;">
+      </div>
       <h3>${produto.nome}</h3>
       <p>R$ 12,00 (1 un)</p>
-      <p> R$ 10,00 (2+ un)</p>
+      <p>R$ 10,00 (2+ un)</p>
       <button onclick="adicionarCarrinho('${produto.nome}')">Adicionar</button>
     `;
     lista.appendChild(card);
   });
 }
-
     function adicionarCarrinho(sabor) {
       carrinho.push(sabor);
       atualizarCarrinho();
@@ -234,9 +240,9 @@ const produtos = [
         return;
       }
 
-      let mensagem = '*Pedido Petit Cake*%0A';
-      mensagem += `👤 Nome: ${nome}%0A📧 E-mail: ${email}%0A📱 Telefone: ${telefone}%0A%0A`;
-      mensagem += '*Itens do pedido:*%0A';
+      let mensagem = '*Pedido Petit Cake*';
+      mensagem += `- Nome: ${nome}- E-mail: ${email} - Telefone: ${telefone}`;
+      mensagem += '*Itens do pedido:*';
 
       const resumo = {};
       carrinho.forEach(item => {
@@ -244,11 +250,11 @@ const produtos = [
       });
 
       for (let sabor in resumo) {
-        mensagem += `• ${sabor}: ${resumo[sabor]} unidade(s)%0A`;
+        mensagem += `• ${sabor}: ${resumo[sabor]} unidade(s)`;
       }
 
       const total = carrinho.length < 2 ? carrinho.length * 12 : carrinho.length * 10;
-      mensagem += `%0A💰 Total: R$ ${total},00%0A%0A🍰 Obrigado por comprar com a Petit Cake!`;
+      mensagem += ` Total: R$ ${total}, Obrigado por comprar com a Petit Cake!`;
 
       const url = `https://wa.me/11996834883?text=${mensagem}`;
       window.open(url, '_blank');
